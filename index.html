@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endesa - El Futuro de la Distribución Eléctrica en Baleares</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    :root {
+      --black: #0D0D0D;
+      --grey: #FFFFFF;
+      --darkBlue: #0583F2;
+      --medBlue: #05DBF2;
+      --lightBlue: #05DBF2;
+    }
+    body {
+      font-family: 'Arial', sans-serif;
+      background: var(--black);
+      color: var(--grey);
+      overflow-x: hidden;
+      position: relative;
+      margin: 0;
+    }
+    .animate-hidden { opacity: 0; transform: translateY(60px); }
+    .image-hidden { opacity: 0; transform: scale(0.8); }
+    .card-hidden { opacity: 0; transform: scale(0.8) translateY(40px); }
+    .hover-scale:hover { transform: scale(1.05); transition: transform 0.4s ease; }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #FFFFFF;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      position: relative;
+    }
+    .section-title::before {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 3px;
+      background: var(--lightBlue);
+      transition: width 0.5s ease;
+    }
+    .section-title:hover::before {
+      width: 100%;
+    }
+    .header {
+      background: linear-gradient(90deg, var(--darkBlue), var(--black));
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    .card {
+      background: linear-gradient(145deg, #1f2937, #374151);
+      border-radius: 16px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+      transition: transform 0.4s ease, box-shadow 0.4s ease;
+      color: var(--grey);
+      position: relative;
+      overflow: hidden;
+    }
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(5, 219, 242, 0.3), transparent);
+      transition: left 0.5s ease;
+    }
+    .card:hover::before {
+      left: 100%;
+    }
+    .card:hover {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+    .cta-button {
+      background: linear-gradient(45deg, var(--medBlue), var(--lightBlue));
+      transition: transform 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+      color: var(--black);
+      position: relative;
+    }
+    .cta-button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      background: radial-gradient(circle, var(--lightBlue), transparent);
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    }
+    .cta-button:hover::after {
+      width: 200px;
+      height: 200px;
+      opacity: 0.5;
+    }
+    .cta-button:hover {
+      background: linear-gradient(45deg, var(--darkBlue), var(--medBlue));
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+    }
+    .image-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .image-container img {
+      transition: transform 0.5s ease;
+    }
+    .image-container:hover img {
+      transform: scale(1.1);
+    }
+    .bg-overlay {
+      background: rgba(0, 0, 0, 0.4);
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .image-container:hover .bg-overlay {
+      opacity: 1;
+    }
+    #background-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(180deg, var(--black), var(--darkBlue));
+    }
+    .spark {
+      position: absolute;
+      background: radial-gradient(circle, var(--lightBlue) 10%, var(--medBlue) 50%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 10px var(--lightBlue);
+    }
+    .lightning {
+      position: absolute;
+      width: 2px;
+      height: 50px;
+      background: var(--lightBlue);
+      opacity: 0;
+      transform: rotate(45deg);
+      pointer-events: none;
+    }
+    @media (max-width: 768px) {
+      .section-title { font-size: 1.8rem; }
+      .card { padding: 1.2rem; }
+      .image-container img { max-height: 180px; }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="background-canvas"></canvas>
+  
+  <header class="header text-white py-4 fixed w-full z-20">
+    <div class="container mx-auto px-4 flex items-center justify-between">
+      <img src="Logo ENDESA (1).png" alt="Endesa Logo" class="h-10 animate-hidden" id="header-logo">
+      <h1 class="text-lg md:text-xl font-bold animate-hidden" id="header-title">Distribución Eléctrica del Futuro</h1>
+    </div>
+  </header>
+  <section class="pt-16 pb-16 text-center relative">
+    <div class="container mx-auto px-4">
+      <div class="image-container mx-auto w-full max-w-3xl mb-6">
+        <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop" alt="Baleares Landscape" class="w-full h-80 object-cover image-hidden" id="hero-image">
+        <div class="bg-overlay"></div>
+      </div>
+      <h2 class="section-title mb-4 animate-hidden" id="hero-title">¡Sé Parte de la Revolución Energética del Futuro!</h2>
+      <p class="text-base md:text-lg max-w-3xl mx-auto leading-relaxed text-white animate-hidden" id="hero-text">
+        En Endesa, estamos transformando el sector eléctrico en Baleares con tecnologías innovadoras y sostenibles. ¿Te imaginas liderar el cambio hacia un mundo más verde y conectado? ¡Tú puedes ser el talento joven que haga la diferencia! Únete a nosotros y descubre cómo tus ideas pueden iluminar el futuro.
+      </p>
+    </div>
+  </section>
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-center mb-10 animate-hidden" id="reto-title">¿Te Atreves a Resolver los Desafíos Energéticos del Mañana?</h2>
+      <p class="text-sm md:text-base text-center max-w-3xl mx-auto mb-10 leading-relaxed text-white animate-hidden" id="reto-text">
+        El sector eléctrico necesita mentes creativas como la tuya para innovar y construir un futuro sostenible. En Baleares, enfrentamos retos únicos, y tú puedes ser la clave para superarlos. Imagina desarrollar soluciones que no solo transformen la red eléctrica, sino que también inspiren a toda una generación. ¡Tu talento es el impulso que necesitamos!
+      </p>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-6 hover-scale card-hidden" id="card-1">
+          <div class="image-container mb-4">
+            <img src="https://images.unsplash.com/photo-1581093588435-8e6a44a072b7?q=80&w=2070&auto=format&fit=crop" alt="Electric Innovation" class="w-full h-40 object-cover">
+            <div class="bg-overlay"></div>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold mb-3 text-white">Solución Integral</h3>
+          <p class="text-xs md:text-sm">
+            Analizamos qué motiva al talento joven de Baleares al elegir sus estudios y qué barreras encuentran, diseñando soluciones que respondan a sus expectativas.
+          </p>
+        </div>
+        <div class="card p-6 hover-scale card-hidden" id="card-2">
+          <div class="image-container mb-4">
+            <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop" alt="Tech Improvements" class="w-full h-40 object-cover">
+            <div class="bg-overlay"></div>
+          </div>
+          <h3 class="text-lg md:text-xl font-bold mb-3 text-white">Mejoras a Corto Plazo</h3>
+          <p class="text-xs md:text-sm">
+            Identificamos puntos de mejora comparándonos con sectores más atractivos, proponiendo cambios prácticos y rápidos para captar talento.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-16 bg-gradient-to-b from-gray-800 to-blue-900">
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-center mb-10 animate-hidden" id="enfoque-title">Construye tu Futuro con Tecnología y Propósito</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div class="card p-6 hover-scale card-hidden" id="card-3">
+          <div class="image-container mb-4">
+            <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2073&auto=format&fit=crop" alt="Innovation" class="w-full h-40 object-cover">
+            <div class="bg-overlay"></div>
+          </div>
+          <h3 class="text-base md:text-lg font-bold mb-3 text-white">Innovación</h3>
+          <p class="text-xs md:text-sm">Trabaja con las últimas tecnologías, desde redes inteligentes hasta energías renovables, y sé parte de proyectos que están definiendo el futuro.</p>
+        </div>
+        <div class="card p-6 hover-scale card-hidden" id="card-4">
+          <div class="image-container mb-4">
+            <img src="https://images.unsplash.com/photo-1497436072909-60f69e1b28b8?q=80&w=2070&auto=format&fit=crop" alt="Sustainability" class="w-full h-40 object-cover">
+            <div class="bg-overlay"></div>
+          </div>
+          <h3 class="text-base md:text-lg font-bold mb-3 text-white">Sostenibilidad</h3>
+          <p class="text-xs md:text-sm">Contribuye a un planeta más verde. Aquí, tu trabajo tiene un impacto real en la lucha contra el cambio climático.</p>
+        </div>
+        <div class="card p-6 hover-scale card-hidden" id="card-5">
+          <div class="image-container mb-4">
+            <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?q=80&w=2070&auto=format&fit=crop" alt="Professional Development" class="w-full h-40 object-cover">
+            <div class="bg-overlay"></div>
+          </div>
+          <h3 class="text-base md:text-lg font-bold mb-3 text-white">Desarrollo Profesional</h3>
+          <p class="text-xs md:text-sm">Crece con nosotros. Ofrecemos formación continua, mentorías y la oportunidad de liderar proyectos que marcan la diferencia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-16">
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-center mb-10 animate-hidden" id="testimonios-title">Voces del Futuro: Jóvenes que ya están Transformando el Sector</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="card p-6 hover-scale card-hidden" id="testimonio-1">
+          <p class="text-sm md:text-base italic">"Nunca imaginé que mi pasión por la tecnología podría ayudar a crear un mundo más sostenible. Aquí, cada día es una oportunidad para innovar."</p>
+          <p class="text-right text-white font-bold mt-4">— María, Ingeniera de Redes Inteligentes</p>
+        </div>
+        <div class="card p-6 hover-scale card-hidden" id="testimonio-2">
+          <p class="text-sm md:text-base italic">"Lo que más me gusta es saber que mi trabajo contribuye a algo más grande. Además, el equipo es como una segunda familia."</p>
+          <p class="text-right text-white font-bold mt-4">— Carlos, Técnico en Energías Renovables</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-16 bg-gradient-to-b from-blue-900 to-gray-800">
+    <div class="container mx-auto px-4">
+      <h2 class="section-title text-center mb-10 animate-hidden" id="oportunidades-title">Explora tu Camino en el Sector Eléctrico</h2>
+      <p class="text-sm md:text-base text-center max-w-3xl mx-auto mb-10 leading-relaxed text-white animate-hidden" id="oportunidades-text">
+        Desde ingeniería eléctrica hasta gestión de proyectos y análisis de datos, el sector ofrece carreras emocionantes para todo tipo de talentos. ¿Te apasiona la tecnología? ¿Quieres liderar equipos? ¿O prefieres trabajar en el campo? Aquí hay un lugar para ti. Descubre nuestras áreas clave y encuentra tu vocación.
+      </p>
+    </div>
+  </section>
+  <section class="py-16 text-center relative">
+    <div class="container mx-auto px-4">
+      <div class="image-container mx-auto w-full max-w-3xl mb-6">
+        <img src="imagen_juego.jpg" alt="Future Energy" class="w-full h-100 object-cover image-hidden" id="cta-image">
+        <div class="bg-overlay"></div>
+      </div>
+      <h2 class="section-title mb-4 animate-hidden" id="cta-title">¡Empieza tu Viaje Hoy y Sé Parte del Cambio!</h2>
+      <p class="text-sm md:text-base max-w-2xl mx-auto mb-8 leading-relaxed text-white animate-hidden" id="cta-text">
+        ¡Desafía tu ingenio con nuestro juego de redes eléctricas! Conecta, optimiza y resuelve problemas energéticos en un entorno dinámico y divertido. ¿Podrás mantener las luces encendidas? ¡Pruébalo ahora y enciende tu pasión por la innovación!
+      </p>
+      <a href="https://www.endesa.com" class="cta-button text-white px-8 py-4 rounded-full text-base font-semibold inline-block card-hidden" id="cta-button">Conoce Más</a>
+    </div>
+  </section>
+  <footer class="bg-gradient-to-r from-var(--black) to-var(--darkBlue) text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p class="text-xs md:text-sm animate-hidden" id="footer-text">© 2025 Endesa. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+  <script>
+    const canvas = document.getElementById('background-canvas');
+    const ctx = canvas.getContext('2d');
+    let sparks = [];
+    let lightnings = [];
+    let scrollY = 0;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Spark {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.radius = Math.random() * 8 + 4;
+        this.speedX = (Math.random() - 0.5) * 3;
+        this.speedY = (Math.random() - 0.5) * 3;
+        this.opacity = Math.random() * 0.5 + 0.3;
+        this.phase = Math.random() * Math.PI * 2;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY + scrollY * 0.02;
+        this.phase += 0.1;
+        this.opacity = 0.3 + 0.5 * Math.sin(this.phase);
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(5, 219, 242, ${this.opacity})`;
+        ctx.shadowBlur = 10;
+        ctx.shadowColor = 'var(--lightBlue)';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    class Lightning {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.opacity = 0;
+        this.element = document.createElement('div');
+        this.element.className = 'lightning';
+        this.element.style.left = `${this.x}px`;
+        this.element.style.top = `${this.y}px`;
+        document.body.appendChild(this.element);
+      }
+      animate() {
+        anime({
+          targets: this.element,
+          opacity: [
+            { value: 0, duration: 0 },
+            { value: 0.8, duration: 100 },
+            { value: 0, duration: 200 }
+          ],
+          scaleY: [1, 1.5, 1],
+          rotate: [45, 50, 45],
+          easing: 'easeInOutQuad',
+          duration: 300,
+          complete: () => {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.element.style.left = `${this.x}px`;
+            this.element.style.top = `${this.y}px`;
+            setTimeout(() => this.animate(), Math.random() * 3000 + 1000);
+          }
+        });
+      }
+    }
+
+    function initSparks() {
+      sparks = [];
+      const numSparks = Math.floor((canvas.width * canvas.height) / 4000); // Increased from 8000 to 4000
+      for (let i = 0; i < numSparks; i++) {
+        sparks.push(new Spark());
+      }
+    }
+
+    function initLightnings() {
+      lightnings = [];
+      const numLightnings = 10; // Increased from 5 to 10
+      for (let i = 0; i < numLightnings; i++) {
+        const lightning = new Lightning();
+        lightnings.push(lightning);
+        setTimeout(() => lightning.animate(), Math.random() * 2000);
+      }
+    }
+
+    initSparks();
+    initLightnings();
+
+    function animateBackground() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      sparks.forEach(spark => {
+        spark.update();
+        spark.draw();
+      });
+      requestAnimationFrame(animateBackground);
+    }
+    animateBackground();
+
+    window.addEventListener('scroll', () => {
+      scrollY = window.scrollY;
+    });
+
+    anime({
+      targets: '#header-logo',
+      scale: [0, 1],
+      opacity: [0, 1],
+      easing: 'spring(1, 80, 10, 0)',
+      duration: 1000
+    });
+    anime({
+      targets: '#header-title',
+      translateY: [60, 0],
+      opacity: [0, 1],
+      easing: 'easeOutElastic(1, 0.6)',
+      duration: 1200,
+      delay: 200,
+      begin: () => {
+        anime({
+          targets: '#header-title',
+          textShadow: [
+            { value: `0 0 10px var(--lightBlue)`, duration: 600 },
+            { value: `0 0 20px var(--lightBlue)`, duration: 600 },
+            { value: `0 0 10px var(--lightBlue)`, duration: 600 }
+          ],
+          easing: 'easeInOutQuad',
+          loop: true
+        });
+      }
+    });
+
+    anime({
+      targets: '#hero-image',
+      scale: [0.8, 1],
+      opacity: [0, 1],
+      easing: 'easeOutExpo',
+      duration: 1400
+    });
+    anime({
+      targets: '#hero-title',
+      translateY: [60, 0],
+      opacity: [0, 1],
+      easing: 'easeOutElastic(1, 0.6)',
+      duration: 1400,
+      delay: 400
+    });
+    anime({
+      targets: '#hero-text',
+      translateY: [60, 0],
+      opacity: [0, 1],
+      easing: 'easeOutExpo',
+      duration: 1400,
+      delay: 600,
+      begin: () => {
+        anime({
+          targets: '#hero-text',
+          textShadow: [
+            { value: `0 0 5px var(--medBlue)`, duration: 800 },
+            { value: `0 0 10px var(--medBlue)`, duration: 800 },
+            { value: `0 0 5px var(--medBlue)`, duration: 800 }
+          ],
+          easing: 'easeInOutQuad',
+          loop: true
+        });
+      }
+    });
+
+    const retoObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#reto-title',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400
+          });
+          anime({
+            targets: '#reto-text',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1400,
+            delay: 200
+          });
+          anime({
+            targets: ['#card-1', '#card-2'],
+            translateY: [40, 0],
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            easing: 'spring(1, 80, 10, 0)',
+            duration: 1400,
+            delay: anime.stagger(400, { start: 400 }),
+            begin: () => {
+              anime({
+                targets: ['#card-1', '#card-2'],
+                boxShadow: [
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 20px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 }
+                ],
+                easing: 'easeInOutQuad',
+                loop: true
+              });
+            }
+          });
+          retoObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    retoObserver.observe(document.querySelector('#reto-title'));
+
+    const enfoqueObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#enfoque-title',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400
+          });
+          anime({
+            targets: ['#card-3', '#card-4', '#card-5'],
+            translateY: [40, 0],
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            easing: 'spring(1, 80, 10, 0)',
+            duration: 1400,
+            delay: anime.stagger(400, { start: 200 }),
+            begin: () => {
+              anime({
+                targets: ['#card-3', '#card-4', '#card-5'],
+                boxShadow: [
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 20px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 }
+                ],
+                easing: 'easeInOutQuad',
+                loop: true
+              });
+            }
+          });
+          enfoqueObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    enfoqueObserver.observe(document.querySelector('#enfoque-title'));
+
+    const testimoniosObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#testimonios-title',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400
+          });
+          anime({
+            targets: ['#testimonio-1', '#testimonio-2'],
+            translateY: [40, 0],
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            easing: 'spring(1, 80, 10, 0)',
+            duration: 1400,
+            delay: anime.stagger(400, { start: 200 }),
+            begin: () => {
+              anime({
+                targets: ['#testimonio-1', '#testimonio-2'],
+                boxShadow: [
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 20px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 }
+                ],
+                easing: 'easeInOutQuad',
+                loop: true
+              });
+            }
+          });
+          testimoniosObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    testimoniosObserver.observe(document.querySelector('#testimonios-title'));
+
+    const oportunidadesObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#oportunidades-title',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400
+          });
+          anime({
+            targets: '#oportunidades-text',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1400,
+            delay: 200
+          });
+          oportunidadesObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    oportunidadesObserver.observe(document.querySelector('#oportunidades-title'));
+
+    const ctaObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#cta-image',
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1400
+          });
+          anime({
+            targets: '#cta-title',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400,
+            delay: 200
+          });
+          anime({
+            targets: '#cta-text',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutExpo',
+            duration: 1400,
+            delay: 400
+          });
+          anime({
+            targets: '#cta-button',
+            translateY: [40, 0],
+            scale: [0.8, 1],
+            opacity: [0, 1],
+            easing: 'spring(1, 80, 10, 0)',
+            duration: 1400,
+            delay: 600,
+            begin: () => {
+              anime({
+                targets: '#cta-button',
+                boxShadow: [
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 20px var(--lightBlue)`, duration: 600 },
+                  { value: `0 0 10px var(--lightBlue)`, duration: 600 }
+                ],
+                easing: 'easeInOutQuad',
+                loop: true
+              });
+            }
+          });
+          ctaObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    ctaObserver.observe(document.querySelector('#cta-title'));
+
+    const footerObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          anime({
+            targets: '#footer-text',
+            translateY: [60, 0],
+            opacity: [0, 1],
+            easing: 'easeOutElastic(1, 0.6)',
+            duration: 1400,
+            begin: () => {
+              anime({
+                targets: '#footer-text',
+                textShadow: [
+                  { value: `0 0 5px var(--medBlue)`, duration: 800 },
+                  { value: `0 0 10px var(--medBlue)`, duration: 800 },
+                  { value: `0 0 5px var(--medBlue)`, duration: 800 }
+                ],
+                easing: 'easeInOutQuad',
+                loop: true
+              });
+            }
+          });
+          footerObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    footerObserver.observe(document.querySelector('#footer-text'));
+  </script>
+</body>
+</html>
