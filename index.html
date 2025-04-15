@@ -49,7 +49,7 @@
       width: 100%;
     }
     .header {
-      background: linear-gradient(90deg, var(--darkBlue), var(--black));
+      background: linear-gradient(90deg, white, rgb(44, 144, 202));
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
     }
     .card {
@@ -83,6 +83,7 @@
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
       color: var(--black);
       position: relative;
+      margin: 10px;
     }
     .cta-button::after {
       content: '';
@@ -168,6 +169,8 @@
   <header class="header text-white py-4 fixed w-full z-20">
     <div class="container mx-auto px-4 flex items-center justify-between">
       <img src="Logo ENDESA (1).png" alt="Endesa Logo" class="h-10 animate-hidden" id="header-logo">
+      <img src="logo-cobra.png" alt="Cobra logo" class="h-10 animate-hidden" id="header-logo">
+      <img src="logo-grupo-elecnor.png" alt="Elecnor logo" class="h-10 animate-hidden" id="header-logo">
       <h1 class="text-lg md:text-xl font-bold animate-hidden" id="header-title">Distribución Eléctrica del Futuro</h1>
     </div>
   </header>
@@ -192,7 +195,7 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div class="card p-6 hover-scale card-hidden" id="card-1">
           <div class="image-container mb-4">
-            <img src="https://images.unsplash.com/photo-1581093588435-8e6a44a072b7?q=80&w=2070&auto=format&fit=crop" alt="Electric Innovation" class="w-full h-40 object-cover">
+            <img src="https://img.multimap.es/wp-content/uploads/2023/12/cerco-electrico.jpeg" alt="Electric Innovation" class="w-full h-40 object-cover">
             <div class="bg-overlay"></div>
           </div>
           <h3 class="text-lg md:text-xl font-bold mb-3 text-white">Solución Integral</h3>
@@ -227,7 +230,7 @@
         </div>
         <div class="card p-6 hover-scale card-hidden" id="card-4">
           <div class="image-container mb-4">
-            <img src="https://images.unsplash.com/photo-1497436072909-60f69e1b28b8?q=80&w=2070&auto=format&fit=crop" alt="Sustainability" class="w-full h-40 object-cover">
+            <img src="https://www.factorenergia.com/wp-content/uploads/2023/03/transicion-energetica.png" alt="Sustainability" class="w-full h-40 object-cover">
             <div class="bg-overlay"></div>
           </div>
           <h3 class="text-base md:text-lg font-bold mb-3 text-white">Sostenibilidad</h3>
@@ -277,12 +280,14 @@
       <p class="text-sm md:text-base max-w-2xl mx-auto mb-8 leading-relaxed text-white animate-hidden" id="cta-text">
         ¡Desafía tu ingenio con nuestro juego de redes eléctricas! Conecta, optimiza y resuelve problemas energéticos en un entorno dinámico y divertido. ¿Podrás mantener las luces encendidas? ¡Pruébalo ahora y enciende tu pasión por la innovación!
       </p>
-      <a href="https://www.endesa.com" class="cta-button text-white px-8 py-4 rounded-full text-base font-semibold inline-block card-hidden" id="cta-button">Conoce Más</a>
+      <a href="https://www.endesa.com" class="cta-button text-white px-8 py-4 rounded-full text-base font-semibold inline-block card-hidden" id="cta-button">Más Sobre Endesa</a>
+      <a href="https://www.elecnor.com/home" class="cta-button text-white px-8 py-4 rounded-full text-base font-semibold inline-block card-hidden" id="cta-button">Más Sobre Elecnor</a>
+      <a href="https://www.grupocobra.com/" class="cta-button text-white px-8 py-4 rounded-full text-base font-semibold inline-block card-hidden" id="cta-button">Más Sobre Cobra</a>
     </div>
   </section>
   <footer class="bg-gradient-to-r from-var(--black) to-var(--darkBlue) text-white py-8">
     <div class="container mx-auto px-4 text-center">
-      <p class="text-xs md:text-sm animate-hidden" id="footer-text">© 2025 Endesa. Todos los derechos reservados.</p>
+      <p class="text-xs md:text-sm animate-hidden" id="footer-text">© Equipo V. Todos los derechos reservados.</p>
     </div>
   </footer>
   <script>
